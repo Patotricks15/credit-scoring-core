@@ -131,5 +131,7 @@ def split_by_issue_date(df: pd.DataFrame, train_end: str, test_start: str):
 
 def to_frame_features(df: pd.DataFrame):
     X = df[LC_NUMERIC + LC_CATEGORICAL].copy()
+    # Nullable Float64 columns (e.g. revol_util) break NumPy float conversion, so use plain float.
+    X[LC_NUMERIC] = X[LC_NUMERIC].astype("float64")
     X[LC_CATEGORICAL] = X[LC_CATEGORICAL].astype(str).replace({"nan": np.nan})
     return X, df["y"]
